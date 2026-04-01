@@ -21,6 +21,15 @@ function formatDateHeading(dateStr: string) {
   return d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
 }
 
+function mealLabel(iso: string, dayOfWeek: number): string {
+  const h = new Date(iso).getHours() + new Date(iso).getMinutes() / 60;
+  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+  if (isWeekend) return h < 16 ? "Brunch" : "Dinner";
+  if (h < 11) return "Breakfast";
+  if (h < 16) return "Lunch";
+  return "Dinner";
+}
+
 type Props = {
   hostName: string;
   eventSlug: string;
@@ -293,14 +302,18 @@ export default function BookingView({ hostName, eventSlug, slots, timeZone, loca
                 {formatDateHeading(selectedDate)}
               </h2>
               <div className="space-y-2">
-                {slotsForDay.map((slot) => (
-                  <button
-                    key={slot.start}
-                    onClick={() => handleSlotClick(slot)}
-                    className="flex w-full items-center justify-center rounded-lg border border-sage px-4 py-2.5 text-sm font-medium text-charcoal transition-colors hover:border-sf-red hover:text-sf-red">
-                    {formatTime(slot.start)}
-                  </button>
-                ))}
+                {slotsForDay.map((slot) => {
+                  const dayOfWeek = new Date(selectedDate + "T12:00:00").getDay();
+                  const meal = mealLabel(slot.start, dayOfWeek);
+                  return (
+                    <button
+                      key={slot.start}
+                      onClick={() => handleSlotClick(slot)}
+                      className="flex w-full items-center justify-center rounded-lg border border-sage px-4 py-2.5 text-sm font-medium text-charcoal transition-colors hover:border-sf-red hover:text-sf-red">
+                      {meal} &ndash; {formatTime(slot.start)}
+                    </button>
+                  );
+                })}
               </div>
             </>
           ) : (
