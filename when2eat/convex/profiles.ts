@@ -46,6 +46,7 @@ export const update = mutation({
     name: v.optional(v.string()),
     calUsername: v.optional(v.string()),
     eventSlugs: v.optional(v.array(v.string())),
+    locations: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);

@@ -43,6 +43,7 @@ export async function createBooking(
   attendeeName: string,
   attendeeEmail: string,
   timeZone: string,
+  notes?: string,
 ): Promise<BookingResult> {
   const res = await fetch(`${CAL_API}/bookings`, {
     method: "POST",
@@ -59,6 +60,8 @@ export async function createBooking(
         email: attendeeEmail,
         timeZone,
       },
+      ...(notes ? { bookingFieldsResponses: { notes } } : {}),
+      metadata: { source: "when2eat.stanfood.live" },
     }),
   });
   if (!res.ok) {

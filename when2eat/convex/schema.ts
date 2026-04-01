@@ -11,6 +11,7 @@ export default defineSchema({
     name: v.optional(v.string()),
     calUsername: v.optional(v.string()),
     eventSlugs: v.optional(v.array(v.string())),
+    locations: v.optional(v.array(v.string())),
   })
     .index("by_userId", ["userId"])
     .index("by_sunetId", ["sunetId"]),

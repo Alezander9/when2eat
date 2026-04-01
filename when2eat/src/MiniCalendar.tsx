@@ -46,26 +46,26 @@ export default function MiniCalendar({ availableDates, selectedDate, onSelectDat
           onClick={prevMonth}
           disabled={isPastMonth}
           className={cn(
-            "flex h-8 w-8 items-center justify-center rounded-full",
-            isPastMonth ? "text-gray-300 cursor-not-allowed" : "text-gray-500 hover:bg-gray-100",
+            "flex h-8 w-8 items-center justify-center rounded-full transition-colors",
+            isPastMonth ? "text-tan/30 cursor-not-allowed" : "text-charcoal/60 hover:bg-cream-dark",
           )}>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
-        <h2 className="text-sm font-semibold text-gray-900">
-          {MONTHS[viewMonth]} <span className="text-gray-500">{viewYear}</span>
+        <h2 className="text-sm font-semibold text-charcoal">
+          {MONTHS[viewMonth]} <span className="text-tan">{viewYear}</span>
         </h2>
         <button
           onClick={nextMonth}
-          className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100">
+          className="flex h-8 w-8 items-center justify-center rounded-full text-charcoal/60 transition-colors hover:bg-cream-dark">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
       </div>
 
-      <div className="mb-2 grid grid-cols-7 text-center text-xs font-medium text-gray-500">
+      <div className="mb-2 grid grid-cols-7 text-center text-xs font-medium text-charcoal/50">
         {WEEKDAYS.map((d) => <div key={d}>{d}</div>)}
       </div>
 
@@ -88,11 +88,11 @@ export default function MiniCalendar({ availableDates, selectedDate, onSelectDat
               <span
                 className={cn(
                   "absolute inset-0 flex items-center justify-center rounded-md text-sm transition-colors",
-                  isSelected && "bg-gray-900 text-white font-semibold",
-                  isAvailable && !isSelected && !isPast && "bg-gray-200 font-medium text-gray-900 hover:bg-gray-300 cursor-pointer",
-                  isToday && !isSelected && "ring-1 ring-gray-900",
-                  isPast && !isSelected && "text-gray-300 cursor-default",
-                  !isAvailable && !isPast && !isSelected && "text-gray-900",
+                  isSelected && "bg-sf-red text-white font-semibold",
+                  isAvailable && !isSelected && !isPast && "bg-sage font-medium text-charcoal hover:bg-tan hover:text-white cursor-pointer",
+                  isToday && !isSelected && "ring-1 ring-sf-red",
+                  isPast && !isSelected && "text-tan/40 cursor-default",
+                  !isAvailable && !isPast && !isSelected && "text-charcoal",
                 )}>
                 {day}
               </span>

@@ -28,6 +28,13 @@ function parseCalUrl(input: string): { username: string; slug: string } | null {
   return { username: parts[0], slug: parts[1] };
 }
 
+function buildNotes(location: string): string {
+  const parts = [];
+  if (location) parts.push(`Location: ${location}`);
+  parts.push("Booked via when2eat.stanfood.live");
+  return parts.join("\n\n");
+}
+
 export default function UserPage() {
   const { sunetId } = useParams<{ sunetId: string }>();
   const profile = useQuery(api.profiles.getBySunetId, sunetId ? { sunetId } : "skip");
@@ -46,17 +53,22 @@ export default function UserPage() {
   }, [hasCalConfig, profile?.calUsername, profile?.eventSlugs]);
 
   if (profile === undefined) {
-    return <div className="flex min-h-screen items-center justify-center"><p className="text-gray-500">Loading...</p></div>;
+    return <div className="flex min-h-screen items-center justify-center bg-cream"><p className="text-tan">Loading...</p></div>;
   }
   if (profile === null) {
-    return <div className="flex min-h-screen items-center justify-center"><p className="text-gray-500">Page not found</p></div>;
+    return <div className="flex min-h-screen items-center justify-center bg-cream"><p className="text-tan">Page not found</p></div>;
   }
 
   const isOwner = myProfile?._id === profile._id;
   const eventSlug = profile.eventSlugs?.[0] ?? "";
+  const profileLocations = profile.locations ?? [];
 
-  const handleBook = (slotStart: string, guestName: string) =>
-    createBooking(profile.calUsername!, eventSlug, slotStart, guestName, profile.email, timeZone);
+  const handleBook = (slotStart: string, guestName: string, location: string) =>
+    createBooking(
+      profile.calUsername!, eventSlug, slotStart,
+      guestName, profile.email, timeZone,
+      buildNotes(location),
+    );
 
   const calUrl = profile.calUsername && profile.eventSlugs?.length
     ? `cal.com/${profile.calUsername}/${profile.eventSlugs[0]}`
@@ -69,6 +81,7 @@ export default function UserPage() {
         eventSlug={eventSlug}
         slots={slots}
         timeZone={timeZone}
+        locations={profileLocations}
         onBook={handleBook}
         owner={{
           name: profile.name ?? "",
@@ -81,6 +94,7 @@ export default function UserPage() {
               eventSlugs: parsed?.slug ? [parsed.slug] : undefined,
             });
           },
+          onSaveLocations: (locs: string[]) => void update({ locations: locs }),
         }}
       />
     );
@@ -93,14 +107,15 @@ export default function UserPage() {
         eventSlug={eventSlug}
         slots={slots}
         timeZone={timeZone}
+        locations={profileLocations}
         onBook={handleBook}
       />
     );
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <p className="text-gray-500">
+    <div className="flex min-h-screen items-center justify-center bg-cream">
+      <p className="text-tan">
         {hasCalConfig ? "Loading availability..." : "This host hasn't set up their calendar yet"}
       </p>
     </div>
