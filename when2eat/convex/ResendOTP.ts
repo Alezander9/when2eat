@@ -1,4 +1,5 @@
 import { Email } from "@convex-dev/auth/providers/Email";
+import { internal } from "./_generated/api";
 
 export const ResendOTP = Email({
   id: "resend-otp",
@@ -8,8 +9,9 @@ export const ResendOTP = Email({
     crypto.getRandomValues(array);
     return (array[0] % 900000 + 100000).toString();
   },
-  async sendVerificationRequest({ identifier: email, token }) {
-    // TODO: Replace with Resend API call for production
-    console.log(`[when2eat] OTP for ${email}: ${token}`);
+  async sendVerificationRequest(...args: any[]) {
+    const { identifier: email, token } = args[0];
+    const ctx = args[1];
+    await ctx.runAction(internal.sendOTPEmail.send, { email, token });
   },
 });
